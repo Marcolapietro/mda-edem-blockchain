@@ -10,5 +10,6 @@ The following exercises will be explained by the teacher during the course:
 * [Exercise 2](exercise2): Interacting with an existing Smart Contract
 * [Exercise 3](exercise3): Creating a new Smart Contract
 * [Exercise 4](exercise4): Adding tokens to your wallet
+* [Bonus](exercise5): Some blockchain/web3 tools.
 
 Follow the explained steps carefully!
