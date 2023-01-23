@@ -21,3 +21,6 @@ We will be using different applications and tools to explore the possibilities t
 
 [OpenZeppelin Wizard](https://wizard.openzeppelin.com/)
 * **OpenZeppelin Wizard**: Tool with audited code and 'ready to work' code snippets for smart contracts.
+
+[Remix IDE](https://remix.ethereum.org/)
+* **Remix IDE**: Online IDE to develop and test smart contracts.
