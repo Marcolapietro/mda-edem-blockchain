@@ -22,42 +22,43 @@ Follow these steps to interact with the contract:
 * Select the **Avalanche C-Chain Testnet** network
 * Use this contract: **0x188260444ADfcceDAf7F8B6e50eDaE15D0BE8441**
 * Use the following **ABI** (Application Binary Interface)
+* You can check in Avalanche ledger explorer an smart contract audit: https://testnet.snowtrace.io/address/0x188260444ADfcceDAf7F8B6e50eDaE15D0BE8441
 
 ```
 [
-	{
-		"inputs": [],
-		"name": "poke",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getNumPokes",
-		"outputs": [
-			{
-				"internalType": "int256",
-				"name": "",
-				"type": "int256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "hello",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	}
+    {
+        "inputs": [],
+        "name": "getNumPokes",
+        "outputs": [
+            {
+                "internalType": "int256",
+                "name": "",
+                "type": "int256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "hello",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "poke",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
 ]
 ```
 

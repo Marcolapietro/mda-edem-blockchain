@@ -11,27 +11,28 @@ The Smart Contract code is provided below in Solidity language. You will be intr
 We will start with a pre-created contract so, in the "**File explorer**" add a new file (using the "+" button) and add the following code (which will sound familiar):
 
 ```
-pragma solidity >=0.4.22 <0.7.0;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
 
 /**
  * @title EDEM - MDA
- * @dev Store & retreive value in a variable
+ * @dev Store & retrieve value in a variable
  */
 contract EDEMSmartContract {
 
-    int pokeCount;
-    string greeting = "Hi guys!!! Welcome to the Blockchain session in EDEM's MDA.";
+    int private pokeCount;
+    string private greeting = "Hi guys!!! Welcome to the Blockchain session in EDEM's MDA.";
 
     /**
      * @dev Increase the number of pokes
      */
     function poke() public {
-        pokeCount = pokeCount + 1;
+        pokeCount += 1;
     }
 
     /**
-     * @dev Get the number of getNumPokes
-     * @return Number of pokes
+     * @dev Get the number of pokes
+     * @return The number of pokes
      */
     function getNumPokes() public view returns (int) {
         return pokeCount;

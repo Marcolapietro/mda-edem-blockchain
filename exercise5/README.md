@@ -10,7 +10,7 @@ We will be using different applications and tools to explore the possibilities t
 [Aragon DAO](https://aragon.org/)
 * **Aragon DAO**: Build your own DAO
 
-[Mumbai Faucet](https://cointool.app/)
+[Mumbai Faucet](https://mumbaifaucet.com/)
 * **Mumbai Faucet**: You can get free testnet (Polygon Mumbai) tokens from here!
 
 [Chainlist](https://chainlist.org/)

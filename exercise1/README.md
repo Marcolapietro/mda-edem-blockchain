@@ -13,6 +13,9 @@ We will be using [**MetaMask**](https://metamask.io/) to create a Wallet and con
 * Install the Chrome extension
 * Create a new wallet by clicking on the MetaMask icon (a fox on the top right hand of your browser)
   * You will be asked to note down some words. There are your recovery words in case you lose your wallet.
+* Write down your wallet address in this [file](https://docs.google.com/document/d/to16PN6uUVASLwVLGVNhqB4oGFBjVa4XR4bIIVxehkCYUA/edit?usp=sharing) to get some AVAX from the teacher.
+
+
 * Add the “Avalanche Fuji Testnet” setting up in Metamask the configuration on https://docs.avax.network/quickstart/fuji-workflow
 * Follow the steps in “Fuji’s faucet” in order to get some Avax:
   * https://faucet.avax.network/
