@@ -6,10 +6,12 @@ Exercises for the "Blockchain & Cryptocurrencies" course in EDEM's masters.
 
 The following exercises will be explained by the teacher during the course:
 
-* [Exercise 1](exercise1): Setting up an Avalanche wallet
-* [Exercise 2](exercise2): Interacting with an existing Smart Contract
-* [Exercise 3](exercise3): Creating a new Smart Contract
-* [Exercise 4](exercise4): Adding tokens to your wallet
-* [Bonus](exercise5): Some blockchain/web3 tools.
+* [Exercise 1](exercise1): Setting up an Ethereum wallet (Sepolia testnet)
+* [Exercise 2](exercise2): Interacting with existing Smart Contracts using Etherscan
+* [Exercise 3](exercise3): Creating and deploying your own Smart Contract
+* [Exercise 4](exercise4): Working with ERC-20 tokens
+* [Bonus](exercise5): Blockchain development tools and resources (2025)
+
+**Network**: All exercises use the Ethereum Sepolia testnet for safe, cost-free learning.
 
 Follow the explained steps carefully!
