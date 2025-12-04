@@ -1,104 +1,388 @@
-# Blockchain Tools & Resources (2025)
+# Exercise 5: Smart Contract Storage with Mappings, Modifiers, and Events
 
-We will be using different applications and tools to explore the possibilities that the Web3 ecosystem offers.
+In this exercise you will **create and evolve a smart contract** that demonstrates key Solidity concepts like mappings, modifiers, events, and access control using [**Remix**](https://remix.ethereum.org/).
 
-## Development Tools
+You'll start with a simple storage contract and progressively enhance it to support:
+- Individual user storage (using mappings)
+- Owner-based access control
+- Input validation with modifiers
+- Event emissions for transparency
+- Owner privileges to manage user data
 
-### Smart Contract Development
+This exercise reinforces fundamental blockchain patterns used in real-world DeFi, NFT, and DAO applications!
 
-[Remix IDE](https://remix.ethereum.org/)
-* **Remix IDE**: Browser-based Solidity IDE for developing and testing smart contracts (used in Exercise 3)
+## What You'll Learn
 
-[Hardhat](https://hardhat.org/)
-* **Hardhat**: Professional Ethereum development environment with strong plugin ecosystem and JavaScript/TypeScript support
+- Using **mappings** for user-specific data storage
+- Creating and applying **modifiers** for validation and access control
+- Emitting **events** for off-chain monitoring
+- Implementing **constructor** initialization
+- Managing **owner** privileges
+- Writing more complex Solidity functions
 
-[Foundry](https://getfoundry.sh/)
-* **Foundry**: Fast, modern Ethereum development toolkit built in Rust - becoming the go-to for new projects in 2025
+## The Challenge
 
-[OpenZeppelin Wizard](https://wizard.openzeppelin.com/)
-* **OpenZeppelin Wizard**: Generate audited, production-ready smart contract code (ERC-20, ERC-721, governance contracts)
+You will transform a basic storage contract into a multi-user system with the following requirements:
 
-### Node Providers & Infrastructure
+### Requirements
 
-[Alchemy](https://www.alchemy.com/)
-* **Alchemy**: Powerful blockchain API and node provider with enhanced APIs and developer tools
+1. **Individual User Storage**: The contract currently stores a single global number. Modify it so each user can store their own number without overwriting others (Hint: define a mapping)
 
-[Infura](https://www.infura.io/)
-* **Infura**: Reliable Ethereum and IPFS infrastructure provider
+2. **Owner Management**: Define a global variable to store the contract owner and initialize it in the constructor. The owner will be whoever deploys the contract (msg.sender)
 
-[QuickNode](https://www.quicknode.com/)
-* **QuickNode**: Multi-chain node infrastructure with fast performance
+3. **Create 2 Modifiers**:
+   - To prevent storing the number 0
+   - To ensure only the owner can modify certain data
 
-### Testing & Debugging
+4. **Create 2 Events**:
+   - When a user stores a number
+   - When the owner changes a value on behalf of another user
 
-[Tenderly](https://tenderly.co/)
-* **Tenderly**: Real-time monitoring, debugging, and analytics platform for smart contracts
+5. **Update `store` Function**: Change the logic so it stores a number for each specific user instead of a global number. It must not allow storing 0. Emit an event.
 
-[Ganache](https://trufflesuite.com/ganache/)
-* **Ganache**: Local in-memory blockchain for testing Ethereum applications
+6. **Update `retrieve` Function**: Adjust it to return the number stored by a specific user instead of a global value.
 
-## Token & DAO Creation
+7. **New `storeForUser` Function**: Implement a function that allows the owner to assign values to other users. It must not allow storing 0. Emit an event.
 
-[Thirdweb](https://thirdweb.com/)
-* **Thirdweb**: No-code/low-code platform to deploy tokens, NFTs, DAOs, and entire Web3 apps
+## Part A: Understanding the Initial Contract
 
-[Cointool.app](https://cointool.app/)
-* **Cointool.app**: Multi-chain token creator (Ethereum, BNB Chain, Arbitrum, Base, etc.) with liquidity lock and airdrop tools
+Here's the simple storage contract you'll start with:
 
-[Snapshot](https://snapshot.org/)
-* **Snapshot**: Off-chain gasless voting platform for DAOs - the industry standard for governance
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
 
-[Aragon](https://aragon.org/)
-* **Aragon**: Complete framework for creating and managing DAOs
+contract SimpleStorage {
+    uint256 public number;
 
-[Tally](https://www.tally.xyz/)
-* **Tally**: Leading interface for on-chain governance on Ethereum
+    function store(uint256 num) public {
+        number = num;
+    }
 
-[Gnosis Safe](https://safe.global/)
-* **Gnosis Safe**: Multi-signature wallet for secure DAO treasury management
+    function retrieve() public view returns (uint256) {
+        return number;
+    }
+}
+```
 
-## Network & Chain Tools
+**Current Behavior:**
+- Only stores ONE global number
+- Anyone can overwrite it
+- No validation
+- No events
+- No access control
 
-[Chainlist](https://chainlist.org/)
-* **Chainlist**: Add any blockchain network to MetaMask automatically with correct RPC settings
+## Part B: Development - Build the Enhanced Contract
 
-[Sepolia Faucets](https://sepoliafaucet.com/)
-* **Sepolia Faucets**: Get free testnet ETH for Ethereum Sepolia (Alchemy, Chainlink, QuickNode available)
+1. Go to [Remix IDE](https://remix.ethereum.org/)
+2. Create a new file named `Storage.sol`
+3. Start with the simple contract above
+4. Implement the requirements step by step
 
-[Polygon Amoy Faucet](https://faucet.polygon.technology/)
-* **Polygon Amoy Faucet**: Get free testnet MATIC for Polygon Amoy (replaced Mumbai testnet in 2024)
+### Step-by-Step Implementation Guide
 
-## Block Explorers
+#### Step 1: Add Owner and Constructor
 
-[Etherscan](https://etherscan.io/)
-* **Etherscan**: Most popular Ethereum blockchain explorer (Sepolia: https://sepolia.etherscan.io/)
+```solidity
+address public owner;
 
-[Polygonscan](https://polygonscan.com/)
-* **Polygonscan**: Polygon blockchain explorer
+constructor() {
+    owner = msg.sender;
+}
+```
 
-## NFT & Marketplace
+#### Step 2: Create the Mapping for User Storage
 
-[OpenSea](https://opensea.io/)
-* **OpenSea**: Largest NFT marketplace supporting multiple chains
+```solidity
+mapping(address => uint256) private userNumbers;
+```
 
-[Rarible](https://rarible.com/)
-* **Rarible**: Community-owned NFT marketplace with governance token
+#### Step 3: Define the Modifiers
 
-## Security & Auditing
+Create two modifiers:
+- `notZero(uint256 _num)` - Rejects if the number is 0
+- `onlyOwner()` - Restricts function to the contract owner
 
-[OpenZeppelin Defender](https://www.openzeppelin.com/defender)
-* **OpenZeppelin Defender**: Secure operations platform for managing smart contracts
+```solidity
+modifier notZero(uint256 _num) {
+    require(_num != 0, "Cannot store zero");
+    _;
+}
 
-[Slither](https://github.com/crytic/slither)
-* **Slither**: Static analysis framework for Solidity smart contracts
+modifier onlyOwner() {
+    require(msg.sender == owner, "Only owner can call this function");
+    _;
+}
+```
 
-[Mythril](https://github.com/ConsenSys/mythril)
-* **Mythril**: Security analysis tool for EVM bytecode
+#### Step 4: Define the Events
 
-## Wallet Integration
+```solidity
+event NumberStored(address indexed user, uint256 number);
+event OwnerUpdatedUser(address indexed targetUser, uint256 number, address indexed owner);
+```
 
-[RainbowKit](https://www.rainbowkit.com/)
-* **RainbowKit**: Beautiful wallet connection UI for React apps
+#### Step 5: Update the `store` Function
 
-[WalletConnect](https://walletconnect.com/)
-* **WalletConnect**: Protocol for connecting wallets to dApps across platforms
+Modify it to:
+- Store the number for `msg.sender` in the mapping
+- Use the `notZero` modifier
+- Emit the `NumberStored` event
+
+```solidity
+function store(uint256 num) public notZero(num) {
+    userNumbers[msg.sender] = num;
+    emit NumberStored(msg.sender, num);
+}
+```
+
+#### Step 6: Update the `retrieve` Function
+
+Change it to accept a user address parameter and return that user's stored number:
+
+```solidity
+function retrieve(address user) public view returns (uint256) {
+    return userNumbers[user];
+}
+```
+
+#### Step 7: Create the `storeForUser` Function
+
+This function allows the owner to set values for other users:
+
+```solidity
+function storeForUser(address user, uint256 num) public onlyOwner notZero(num) {
+    userNumbers[user] = num;
+    emit OwnerUpdatedUser(user, num, msg.sender);
+}
+```
+
+### Complete Contract Solution
+
+Here's what your final contract should look like:
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Storage {
+    address public owner;
+    mapping(address => uint256) private userNumbers;
+
+    // Events
+    event NumberStored(address indexed user, uint256 number);
+    event OwnerUpdatedUser(address indexed targetUser, uint256 number, address indexed owner);
+
+    // Modifiers
+    modifier notZero(uint256 _num) {
+        require(_num != 0, "Cannot store zero");
+        _;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only owner can call this function");
+        _;
+    }
+
+    // Constructor
+    constructor() {
+        owner = msg.sender;
+    }
+
+    // Store a number for the caller
+    function store(uint256 num) public notZero(num) {
+        userNumbers[msg.sender] = num;
+        emit NumberStored(msg.sender, num);
+    }
+
+    // Retrieve the number stored by a specific user
+    function retrieve(address user) public view returns (uint256) {
+        return userNumbers[user];
+    }
+
+    // Owner can store a number for any user
+    function storeForUser(address user, uint256 num) public onlyOwner notZero(num) {
+        userNumbers[user] = num;
+        emit OwnerUpdatedUser(user, num, msg.sender);
+    }
+}
+```
+
+## Part C: Compilation
+
+1. Click on the "**Solidity Compiler**" tab (left sidebar)
+2. Set compiler version to `0.8.0` or higher
+3. Click "**Compile Storage.sol**"
+4. Verify you see a green checkmark ✓
+
+## Part D: Testing Locally
+
+Let's test the contract functionality in the Remix JavaScript VM:
+
+1. Click on the "**Deploy & run transactions**" tab
+2. Select "**JavaScript VM (London)**" as environment
+3. Click "**Deploy**"
+4. Expand your deployed contract
+
+### Test Scenarios
+
+**Test 1: Store Your Own Number**
+
+1. Use the `store` function with a value (e.g., 42)
+2. Click "transact"
+3. Copy your address from the "Account" dropdown
+4. Use `retrieve` with your address to verify the stored value
+
+**Test 2: Try to Store Zero (Should Fail)**
+
+1. Use `store` with value `0`
+2. Click "transact"
+3. You should see an error: "Cannot store zero"
+
+**Test 3: Multiple Users Store Different Values**
+
+1. Note the current account address and store a number (e.g., 100)
+2. Switch to a different account in the "Account" dropdown
+3. Store a different number (e.g., 200)
+4. Use `retrieve` for each address - verify each user has their own number!
+
+**Test 4: Owner Stores for Another User**
+
+1. Make sure you're using the **first account** (the owner/deployer)
+2. Copy a different account address
+3. Use `storeForUser`:
+   - `user`: paste the other address
+   - `num`: enter a value (e.g., 777)
+4. Click "transact"
+5. Verify with `retrieve` that the value was set
+
+**Test 5: Non-Owner Tries to Use `storeForUser` (Should Fail)**
+
+1. Switch to a **different account** (not the owner)
+2. Try to use `storeForUser` with any address and number
+3. You should see error: "Only owner can call this function"
+
+**Test 6: Check Events**
+
+1. After calling `store` or `storeForUser`, click on the transaction in the console
+2. Expand the "logs" section
+3. You should see the emitted events with the user address and number!
+
+## Part E: Deploy to Sepolia Testnet
+
+Now let's deploy to the real blockchain:
+
+### Pre-deployment Checklist:
+
+✅ MetaMask installed and connected to Sepolia
+✅ You have test ETH from a faucet
+✅ Contract compiles successfully
+✅ You've tested locally
+
+### Deployment Steps:
+
+1. In "**Deploy & run transactions**" tab
+2. Change environment to "**Injected Provider - MetaMask**"
+3. Connect MetaMask and verify you're on **Sepolia**
+4. Click "**Deploy**"
+5. Confirm the transaction in MetaMask
+6. Wait for confirmation (~15 seconds)
+7. **Save your contract address!**
+
+## Part F: Verify on Etherscan
+
+1. Go to https://sepolia.etherscan.io/
+2. Search for your contract address
+3. Click "**Contract**" tab → "**Verify and Publish**"
+4. Fill in:
+   - Compiler Type: Solidity (Single file)
+   - Compiler Version: v0.8.0 (or your version)
+   - License: MIT
+5. Paste your complete Solidity code
+6. Click "Verify and Publish"
+
+## Part G: Interact with Your Deployed Contract
+
+### On Etherscan:
+
+1. Go to your verified contract
+2. Click "**Write Contract**"
+3. Connect your MetaMask wallet
+4. Test the functions:
+   - Store your number with `store`
+   - Check the "**Events**" tab to see your emitted events
+   - Use `retrieve` in the "**Read Contract**" tab
+   - If you're the owner, try `storeForUser`
+
+### Share with Classmates:
+
+- Have classmates connect their wallets
+- Each stores their own number
+- View each other's stored values using `retrieve`
+- Only the owner (you) can use `storeForUser`
+
+## Part H: Understanding What You Built
+
+### Key Concepts Learned:
+
+**Mappings**: Efficient key-value storage for user-specific data
+```solidity
+mapping(address => uint256) private userNumbers;
+```
+
+**Modifiers**: Reusable validation and access control logic
+```solidity
+modifier notZero(uint256 _num) { ... }
+modifier onlyOwner() { ... }
+```
+
+**Events**: Off-chain logging for indexing and monitoring
+```solidity
+event NumberStored(address indexed user, uint256 number);
+```
+
+**Constructor**: One-time initialization when contract is deployed
+```solidity
+constructor() { owner = msg.sender; }
+```
+
+**Access Control**: Restricting functions to specific addresses
+
+### Real-World Applications:
+
+These patterns are used in:
+- **ERC-20 Tokens**: Mapping addresses to balances
+- **NFT Marketplaces**: User-specific listings and offers
+- **DeFi Protocols**: User deposits and collateral tracking
+- **DAO Systems**: Voting power and membership management
+- **Staking Contracts**: User stake amounts and rewards
+
+## Challenge Extensions
+
+Want to take it further? Try implementing:
+
+1. **Add a getter for current user**: Create `retrieveMine()` that returns `userNumbers[msg.sender]`
+2. **History tracking**: Store an array of historical values for each user
+3. **Transfer function**: Allow users to transfer their stored number to another address
+4. **Batch operations**: Let owner update multiple users at once
+5. **Pause mechanism**: Add a modifier to pause/unpause the contract
+6. **Maximum value**: Add a modifier to enforce a maximum storable value
+
+## Function Reference
+
+### Read Functions (Blue - Free, no gas)
+
+- `owner()` → Returns the contract owner address
+- `retrieve(address user)` → Returns the number stored by `user`
+
+### Write Functions (Orange - Costs gas)
+
+- `store(uint256 num)` → Store `num` for yourself (cannot be 0)
+- `storeForUser(address user, uint256 num)` → (Owner only) Store `num` for `user`
+
+### Events
+
+- `NumberStored(address user, uint256 number)` → Emitted when a user stores a number
+- `OwnerUpdatedUser(address targetUser, uint256 number, address owner)` → Emitted when owner updates a user's number
+
+Congratulations! You've mastered essential Solidity patterns: mappings, modifiers, events, and access control! 🚀
